@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+</head>
+<body>
+<h2>회원가입 폼</h2>
+<form action="/members/checkDuplicate"  method="post">
+    <label for="memberId">회원아이디:</label>
+    <input type="text" id="memberId" name="memberId" required th:value="${memberId}">
+    <button type="submit">중복체크</button>
+    <label th:if="${duplicateMessage}" style="color:red;" th:text="${duplicateMessage}"></label>
+    <br><br>
+</form>
+<form action="/members/register" th:action="@{/members/add}" method="post">
+    <input type="hidden"  name="memberId" required th:value="${memberId}">
+    <label for="memberPass">비밀번호:</label>
+    <input type="password" id="memberPass" name="memberPass" required><br><br>
+
+    <label for="memberName">이름:</label>
+    <input type="text" id="memberName" name="memberName" required><br><br>
+
+    <label for="memberBirth">생년월일:</label>
+    <input type="date" id="memberBirth" name="memberBirth" required><br><br>
+
+    <label for="phone">핸드폰 번호:</label>
+    <input type="text" id="phone" name="phone" required><br><br>
+
+    <input type="submit" value="가입하기">
+</form>
+
+<a th:href="@{/}">홈으로</a>
+</body>
+</html>

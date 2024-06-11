@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>저자 등록</title>
+</head>
+<body>
+<h1>저자 등록</h1>
+
+<form action="/authors/add" th:action method="post">
+    <div>
+        <label for="authorName">저자 이름:</label>
+        <input type="text" id="authorName" name="authorName" required>
+    </div>
+    <div>
+        <label for="authorBirth">저자 생일:</label>
+        <input type="date" id="authorBirth" name="authorBirth" required>
+    </div>
+    <button type="submit">등록</button>
+</form>
+<a th:href="@{/}">홈으로</a>
+</body>
+</html>

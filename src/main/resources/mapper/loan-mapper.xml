@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Loan">
+    <insert id="insertLoan" parameterType="loan">
+        INSERT INTO Loan (bookIsbn, memberId) VALUES (#{bookIsbn}, #{memberId})
+    </insert>
+
+    <delete id="returnBook" parameterType="loan">
+        DELETE FROM Loan
+        WHERE memberId = #{memberId} AND bookIsbn = #{bookIsbn}
+    </delete>
+
+</mapper>

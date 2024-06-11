@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <typeAlias type="library.management.domain.member.Member" alias="member"></typeAlias>
+        <typeAlias type="library.management.web.login.LoginForm" alias="loginForm"></typeAlias>
+        <typeAlias type="library.management.domain.book.Book" alias="book"></typeAlias>
+        <typeAlias type="library.management.domain.book.BookAuthor" alias="bookAuthor"></typeAlias>
+        <typeAlias type="library.management.domain.book.Author" alias="author"></typeAlias>
+        <typeAlias type="library.management.domain.loan.Loan" alias="loan"></typeAlias>
+        <typeAlias type="library.management.domain.review.Review" alias="review"></typeAlias>
+
+    </typeAliases>
+</configuration>

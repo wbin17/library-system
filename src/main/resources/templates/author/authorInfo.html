@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>저자 정보</title>
+</head>
+<body>
+<h1>저자 정보</h1>
+<div>
+    <p>저자 ID: <span th:text="${author.authorId}"></span></p>
+    <p>이름: <span th:text="${author.authorName}"></span></p>
+    <p>생년월일: <span th:text="${author.authorBirth}"></span></p>
+</div>
+<h2>저자가 쓴 책들</h2>
+<div th:each="book : ${author.books}">
+    <p>ISBN: <span th:text="${book.isbn}"></span></p>
+    <p>제목: <span th:text="${book.title}"></span></p>
+    <p>가격: <span th:text="${book.price}"></span></p>
+    <p>대여 여부: <span th:text="${book.is_rented}"></span></p>
+</div>
+
+<a th:href="@{/authors}">저자 목록으로</a>
+</body>
+</html>

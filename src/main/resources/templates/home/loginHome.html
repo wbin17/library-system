@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>홈 화면</title>
+</head>
+<body>
+<div class="container">
+    <div class="navbar">
+        <a href="#home">홈</a>
+        <a href="booklist.html" th:href="@{/books}">책 목록</a>
+        <a href="mypage.html" th:href="@{/members/{memberId}(memberId=${member.memberId})}">마이페이지</a>
+        <a href="author.html" th:href="@{/authors}">저자 목록</a>
+        <form action="/logout" method="post"> <!-- 로그아웃을 처리하는 폼 -->
+            <button type="submit">로그아웃</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

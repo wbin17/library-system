@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>책목록</title>
+</head>
+<body>
+<h1>책 목록</h1>
+<form  th:acton method="get" class="form-inline">
+    <div class="row">
+        <div class="col">
+            <input type="text" th:feild="${title}" name = "title"class="form-control" placeholder="상품명"/>
+        </div>
+        <div class="col">
+            <button type="submit" >검색</button>
+        </div>
+        <div class="col">
+        </div>
+    </div>
+</form>
+
+
+<div class="table-container">
+    <table>
+        <thead>
+        <tr>
+            <th>Isbn</th>
+            <th>제목</th>
+            <th>가격</th>
+            <th>대여중여부</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${bookList}">
+            <td><a th:href="@{/books/{bookIsbn}(bookIsbn=${book.isbn})}"  th:text="${book.isbn}"></a></td>
+            <td><a th:href="@{/books/{bookIsbn}(bookIsbn=${book.isbn})}"  th:text="${book.title}"></a></td>
+            <td th:text="${book.price}">가격</td>
+            <td>
+                <span th:if="${book.is_rented}" th:text="'대여중'">대여중</span>
+                <span th:if="${!book.is_rented}" th:text="'대여가능'">대여가능</span>
+            </td>
+            <td>
+                <form th:if="${!book.is_rented}" th:action="@{/loans/add}" method="post">
+                    <input type="hidden" name="bookIsbn" th:value="${book.isbn}">
+                    <button type="submit">대여하기</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/}">홈으로</a>
+</div>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+

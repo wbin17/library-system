@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>책목록</title>
+</head>
+<body>
+<h1>책 목록</h1>
+<form  th:acton method="get" class="form-inline">
+    <div class="row">
+        <div class="col">
+            <input type="text" th:feild="${title}" name = "title"class="form-control" placeholder="상품명"/>
+        </div>
+
+        <div class="col">
+            <button type="submit" >검색</button>
+        </div>
+        <div class="col">
+        </div>
+
+    </div>
+
+</form>
+
+
+<div class="table-container">
+    <table>
+        <thead>
+        <tr>
+            <th>Isbn</th>
+            <th>제목</th>
+            <th>가격</th>
+            <th>대여중여부</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${bookList}">
+            <td><a th:href="@{/books/{bookIsbn}(bookIsbn=${book.isbn})}"  th:text="${book.isbn}"></a></td>
+            <td><a th:href="@{/books/{bookIsbn}(bookIsbn=${book.isbn})}"  th:text="${book.title}"></a></td>
+            <td th:text="${book.price}">가격</td>
+            <td>
+                <span th:if="${book.is_rented}" th:text="'대여중'">대여중</span>
+                <span th:if="${!book.is_rented}" th:text="'대여가능'">대여가능</span>
+            </td>
+            <td>
+                <form th:action="@{/admin/books/{isbn}/edit(isbn=${book.isbn})}" method="get">
+                    <button type="submit">수정하기</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{/admin/books/{isbn}/delete(isbn = ${book.isbn})}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                    <input type="hidden" name="isbn" th:value="${book.isbn}">
+                    <button type="submit">삭제하기</button>
+                </form>
+                <label th:if="${isbn == book.isbn && message != null}" th:text="${message}" style="color:red;"></label>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/}">홈으로</a>
+
+</div>
+</body>
+</html>

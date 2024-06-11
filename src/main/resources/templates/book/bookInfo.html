@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>책 정보</title>
+</head>
+<body>
+<div class="container">
+  <h1>책 정보</h1>
+  <div class="book-info">
+    <p><strong>ISBN:</strong> <span th:text="${book.isbn}">1234567890</span></p>
+    <p><strong>제목:</strong> <span th:text="${book.title}">책 제목</span></p>
+    <p><strong>가격:</strong> <span th:text="${book.price}">10000</span></p>
+  </div>
+  <div>
+    <table>
+      <thead>
+      <tr>
+        <th>저자</th>
+        <th>생년월일</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="author : ${book.authors}">
+        <td th:text="${author.authorName}">박원빈</td>
+        <td th:text="${author.authorBirth}">19991217</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <a th:href="@{/}">홈으로</a>
+</div>
+
+<h2>리뷰 작성</h2>
+<form th:action="@{/reviews/add}" method="post">
+  <input type="hidden" name="isbn" th:value="${book.isbn}">
+  <input type="hidden" name="memberId" th:value="${member.memberId}">
+  <label for="rating">평점:</label>
+  <select id="rating" name="rating">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+  </select><br><br>
+
+  <label for="reviewText">리뷰:</label>
+  <textarea id="reviewText" name="reviewText" required></textarea><br><br>
+
+  <input type="submit" value="리뷰 작성">
+</form>
+
+<h2>리뷰 목록</h2>
+<div th:each="review : ${reviews}">
+  <div th:if="${member.memberId == review.memberId}">
+    <form th:action="@{/reviews/update}" method="post">
+      <input type="hidden" name="reviewId" th:value="${review.reviewId}">
+      <input type="hidden" name="memberId" th:value="${review.memberId}">
+      <input type="hidden" name="isbn" th:value="${book.isbn}">
+      <div>
+        <label for="updateRating">평점:</label>
+        <input type="number" id="updateRating" name="rating" th:value="${review.rating}" min="1" max="5" required>
+      </div>
+      <div>
+        <label for="updateReviewText">리뷰:</label>
+        <textarea id="updateReviewText" name="reviewText" required th:text="${review.reviewText}"></textarea>
+      </div>
+      <button type="submit">수정</button>
+    </form>
+    <form th:action="@{/reviews/delete}" method="post">
+      <input type="hidden" name="reviewId" th:value="${review.reviewId}">
+      <input type="hidden" name="isbn" th:value="${book.isbn}">
+      <button type="submit">삭제</button>
+    </form>
+  </div>
+  <div>
+    <p>작성자: <span th:text="${review.memberId}">회원아이디</span></p>
+    <p>평점: <span th:text="${review.rating}">평점</span></p>
+    <p>리뷰: <span th:text="${review.reviewText}">리뷰 내용</span></p>
+    <p>작성일: <span th:text="${review.reviewDate}">작성일</span></p>
+  </div>
+  <hr>
+</div>
+
+</body>
+</html>
+

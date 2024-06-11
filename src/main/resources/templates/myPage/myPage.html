@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이 페이지</title>
+</head>
+<body>
+<h1>마이 페이지</h1>
+
+<div class="user-info">
+    <h2>회원 정보</h2>
+    <p><strong>회원 아이디:</strong> <span id="memberId" th:text="${member.memberId}">user123</span></p>
+    <p><strong>이름:</strong> <span id="memberName" th:text="${member.memberName}">홍길동</span></p>
+    <p><strong>생년월일:</strong> <span id="memberBirth" th:text="${member.memberBirth}">1990-01-01</span></p>
+    <p><strong>핸드폰 번호:</strong> <span id="phone" th:text="${member.phone}">010-1234-5678</span></p>
+    <button onclick="location.href='/members/edit?memberId=' + [[${member.memberId}]]"
+            th:onclick="|location.href='@{/members/{memberId}/edit(memberId=${member.memberId})}'|"
+             >회원 정보 수정</button>
+</div>
+
+<div class="rental-info" th:if="${member.is_renting}">
+    <h2>대여 정보</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ISBN</th>
+            <th>대여일</th>
+            <th>반납 예정일</th>
+        </tr>
+        </thead>
+        <tbody id="rentalList">
+        <tr>
+            <td th:text="${member.loan.bookIsbn}">1234567890</td>
+            <td th:text="${member.loan.loanDate}">2024-05-01</td>
+            <td th:text="${member.loan.dueDate}">2024-05-15</td>
+        </tr>
+        <!-- 추가적인 대여 정보를 여기에 추가 -->
+        </tbody>
+    </table>
+
+    <form action="/loans/return" method="post">
+        <input type="hidden" name="bookIsbn" th:value="${member.loan.bookIsbn}" />
+        <input type="hidden" name="member" th:value="${member}" />
+        <button type="submit">반납하기</button>
+    </form>
+
+
+</div>
+<div>
+<form action="/members/delete" th:action="@{/members/delete}" method="post">
+    <input type="hidden"  name="memberId" th:value="${member.memberId}" required><br><br>
+    <button type="submit">탈퇴하기</button>
+</form>
+<label th:if="${message}" th:text="${message}" style="color:red;"></label>
+</div>
+<a th:href="@{/}">홈으로</a>
+</body>
+</html>
+

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Book">
+
+        <resultMap id="BookResultMap" type="book">
+            <id property="isbn" column="isbn"/>
+            <result property="title" column="title"/>
+            <result property="price" column="price"/>
+            <result property="is_rented" column="is_rented"/>
+            <collection property="authors" ofType="author">
+                <id property="authorId" column="authorId"/>
+                <result property="authorName" column="authorName"/>
+                <result property="authorBirth" column="authorBirth"/>
+            </collection>
+        </resultMap>
+
+    <insert id="insertBook">
+        INSERT INTO Book (isbn, title, price) VALUES (#{isbn}, #{title}, #{price})
+    </insert>
+
+    <insert id="insertAuthor">
+        INSERT INTO Author (authorName) VALUES (#{authorName})
+    </insert>
+
+    <insert id="insertBookAuthor">
+        INSERT INTO BookAuthor (isbn, authorId) VALUES (#{isbn}, #{authorId})
+    </insert>
+
+    <update id="updateRentedState1" parameterType="String">
+        update Book
+        set is_rented = 1
+        where isbn = #{bookIsbn}
+    </update>
+
+    <update id="updateRentedState0" parameterType="String">
+        update Book
+        set is_rented = 0
+        where isbn = #{bookIsbn}
+    </update>
+
+    <update id="updateBook" parameterType="book">
+        update Book
+        set title = #{title},
+            price = #{price}
+        where isbn = #{isbn}
+    </update>
+
+    <delete id="deleteBookAuthor" parameterType="bookAuthor">
+        delete from BookAuthor
+        where isbn = #{isbn} and authorId = #{authorId}
+    </delete>
+
+    <delete id="deleteBook" parameterType="string">
+        delete from Book
+            where isbn = #{isbn}
+    </delete>
+
+    <select id="findAll" parameterType="String" resultType="book">
+        select * from book
+        <where>
+            <if test="title != null and title != ''">
+                and title like concat('%',#{title},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="findByBookIsbn" resultType="book" parameterType="String">
+        select * from Book
+        where isbn = #{isbn}
+    </select>
+
+    <select id="selectBookWithAuthors" resultMap="BookResultMap" parameterType="String">
+        SELECT b.isbn, b.title, b.price, b.is_rented,
+        a.authorId, a.authorName as authorName, a.authorBirth as authorBirth
+        FROM Book b
+        LEFT JOIN BookAuthor ba ON b.isbn = ba.isbn
+        LEFT JOIN Author a ON ba.authorId = a.authorId
+        WHERE b.isbn = #{isbn}
+    </select>
+
+    <select id="findAuthorsByBookIsbn" resultType="bookAuthor" parameterType="String">
+        select * from BookAuthor
+        where isbn = #{isbn}
+    </select>
+
+    <select id="isBookRentedByIsbn" parameterType="string" resultType="boolean">
+        select is_rented from Book
+            where isbn = #{isbn}
+    </select>
+</mapper>
+

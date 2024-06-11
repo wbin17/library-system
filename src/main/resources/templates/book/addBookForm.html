@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>책 등록</title>
+    <style>
+        .author-option {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<h1>책 등록</h1>
+
+<form action="/books/add" method="post">
+    <div>
+        <label for="isbn">ISBN:</label>
+        <input type="text" id="isbn" name="isbn" required>
+    </div>
+    <div>
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title" required>
+    </div>
+    <div>
+        <label for="price">가격:</label>
+        <input type="number" id="price" name="price" required>
+    </div>
+    <div>
+        <label for="authorSearch">저자 검색:</label>
+        <input type="text" id="authorSearch" oninput="filterAuthors()">
+    </div>
+    <div>
+        <label for="authors">저자:</label>
+        <div id="authors">
+            <div th:each="author : ${authors}" class="author-option">
+                <input type="checkbox" name="authorIds" th:value="${author.authorId}">
+                <span th:text="'ID: ' + ${author.authorId} + ', 이름: ' + ${author.authorName} + ', 생년월일: ' + ${author.authorBirth}"></span>
+            </div>
+        </div>
+    </div>
+    <button type="submit">등록</button>
+</form>
+<a th:href="@{/}">홈으로</a>
+
+<script>
+    function filterAuthors() {
+        const searchInput = document.getElementById('authorSearch').value.toLowerCase();
+        const authorOptions = document.querySelectorAll('.author-option');
+
+        authorOptions.forEach(option => {
+            const authorInfo = option.textContent.toLowerCase();
+            if (authorInfo.includes(searchInput)) {
+                option.style.display = 'block';
+            } else {
+                option.style.display = 'none';
+            }
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Member">
+
+    <insert id="save" parameterType="member">
+        insert into Member(memberId, memberPass, memberName, memberBirth, phone)
+            values(#{memberId}, #{memberPass}, #{memberName}, #{memberBirth}, #{phone})
+    </insert>
+
+    <insert id="adminSave" parameterType="member">
+        insert into Member(memberId, memberPass, memberName, memberBirth, phone, memberRole)
+            values(#{memberId}, #{memberPass}, #{memberName}, #{memberBirth}, #{phone}, #{memberRole})
+    </insert>
+
+<!--    <select id="findById" parameterType="member" resultType="member">-->
+<!--        select * from Member where memberId = #{memberId}-->
+<!--    </select>-->
+    <update id="updateRentState1" parameterType="String">
+        update Member
+        set is_renting = 1
+        where memberId = #{memberId}
+    </update>
+
+    <update id="updateRentState0" parameterType="String">
+        update Member
+        set is_renting = 0
+        where memberId = #{memberId}
+    </update>
+
+    <select id="findById" parameterType="loginForm" resultType="member">
+        SELECT * FROM Member WHERE memberId = #{memberId} and memberPass = #{memberPass}
+    </select>
+
+    <select id="findByMemberId" resultType="member" parameterType="String">
+        select * from member
+        where memberId = #{memberId}
+    </select>
+
+    <update id="editMember" parameterType="member">
+        update Member
+        SET memberName = #{memberName},
+            memberBirth = #{memberBirth},
+            phone = #{phone}
+        WHERE memberId = #{memberId}
+    </update>
+
+
+    <resultMap id="MemberResultMap" type="member">
+        <!-- Member 테이블의 컬럼 매핑 -->
+        <id column="memberId" property="memberId"/>
+        <result column="memberName" property="memberName"/>
+        <result column="memberBirth" property="memberBirth"/>
+        <result column="phone" property="phone"/>
+        <result column="is_renting" property="is_renting"/>
+        <result column="memberRole" property="memberRole"/>
+
+        <!-- 대출 정보 매핑 -->
+        <collection property="loan" ofType="loan">
+            <id column="memberId" property="memberId"/>
+            <result column="bookIsbn" property="bookIsbn"/>
+            <result column="loanDate" property="loanDate"/>
+            <result column="dueDate" property="dueDate"/>
+            <result column="is_returned" property="is_returned"/>
+            <!-- 다른 대출 정보 컬럼들 매핑 -->
+        </collection>
+        <!-- 다른 관련 객체들에 대한 매핑 추가 -->
+    </resultMap>
+
+    <select id="selectMembersWithLoan" parameterType="String" resultMap="MemberResultMap">
+        <![CDATA[
+        SELECT
+            m.memberId, m.memberName, m.memberBirth,
+            m.phone, m.is_renting, m.memberRole, l.bookIsbn,
+            l.loanDate, l.dueDate, l.is_returned
+        FROM
+            Member m
+        LEFT JOIN
+            Loan l ON m.memberId = l.memberId AND l.is_returned = 0
+        WHERE
+             m.memberId = #{memberId}
+        ]]>
+    </select>
+
+    <select id="isMemberIdAvailable" resultType="int">
+        SELECT COUNT(*) FROM Member WHERE memberId = #{memberId}
+    </select>
+
+    <select id="isMemberRentingBook" resultType="boolean" parameterType="string">
+        select is_renting from Member
+            where memberId = #{memberId}
+    </select>
+
+    <delete id="deleteMember">
+        DELETE FROM Member WHERE memberId = #{memberId}
+    </delete>
+</mapper>
